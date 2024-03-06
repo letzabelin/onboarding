@@ -1,3 +1,4 @@
+[![Build Status](https://drone.zabelin.hz.aidbox.dev/api/badges/letzabelin/onboarding/status.svg)](https://drone.zabelin.hz.aidbox.dev/letzabelin/onboarding)
 
 ### Development mode
 ```
