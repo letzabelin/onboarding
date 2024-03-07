@@ -1,3 +1,5 @@
+COMMIT_HASH := $(shell git rev-parse --short=7 HEAD)
+
 deps:
 	npm ci
 
@@ -9,3 +11,6 @@ start:
 
 build:
 	npx shadow-cljs release app
+
+docker:
+	docker buildx build . --push --platform linux/amd64,linux/arm64 -f Dockerfile -t 1ocke/onboarding-app:$(COMMIT_HASH) -t 1ocke/onboarding-app:latest
