@@ -6,7 +6,7 @@
 
 (defn home-page
   []
-  [:div [:h2 "Welcome to Reagent"]])
+  [:div [:h2 "Hello world"]])
 
 
 (defn mount-root

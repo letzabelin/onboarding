@@ -1,9 +1,49 @@
 kind: pipeline
-type: kubernetes
-name: greeting
+type: kubernetes 
+name: deploy
+
+volumes:
+  - name: dockersock
+    temp: {}
+
+services:
+  - name: docker
+    image: docker:dind
+    privileged: true
+    volumes:
+      - name: dockersock
+        path: /var/run
 
 steps:
-  - name: en
-    image: alpine
+  - name: build-app
+    image: clojure:temurin-17-tools-deps-jammy
     commands:
-      - echo hello world asdf
+      - curl -fsSL https://deb.nodesource.com/setup_21.x | bash
+      - apt-get update && apt-get install nodejs -y
+      - npm ci
+      - npx shadow-cljs release app
+
+  - name: build-push-docker
+    image: docker:dind
+    depends_on: [build-app]
+    environment:
+      DOCKER_USERNAME:
+        from_secret: docker_username
+      DOCKER_PASSWORD:
+        from_secret: docker_password
+    volumes:
+      - name: dockersock
+        path: /var/run
+    commands:
+      - docker buildx create --name samurai --use
+      - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+      - docker buildx build . --push -t 1ocke/onboarding-app:${DRONE_COMMIT_SHA:0:7} -t 1ocke/onboarding-app:latest --platform linux/amd64,linux/arm64
+
+  - name: deploy-to-kubernetes
+    image: bitnami/kubectl
+    depends_on: [build-push-docker]
+    environment:
+      KUBE_CONFIG: {from_secret: kube_config}
+    commands:
+      - echo "$KUBE_CONFIG" > /.kube/config
+      - kubectl -n zabelin rollout restart deployment/app
