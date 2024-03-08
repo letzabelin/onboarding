@@ -22,6 +22,9 @@ steps:
       - apt-get update && apt-get install nodejs -y
       - npm ci
       - npx shadow-cljs release app
+    when:
+      branch:
+        - main
 
   - name: build-push-docker
     image: docker:dind
@@ -38,6 +41,9 @@ steps:
       - docker buildx create --name samurai --use
       - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
       - docker buildx build . --push -t 1ocke/onboarding-app:${DRONE_COMMIT_SHA:0:7} -t 1ocke/onboarding-app:latest --platform linux/amd64,linux/arm64
+    when:
+      branch:
+        - main
 
   - name: deploy-to-kubernetes
     image: bitnami/kubectl
@@ -47,3 +53,29 @@ steps:
     commands:
       - echo "$KUBE_CONFIG" > /.kube/config
       - kubectl -n zabelin rollout restart deployment/app
+    when:
+      branch:
+        - main
+
+  - name: notify-to-telegram
+    image: appleboy/drone-telegram
+    depends_on: [deploy-to-kubernetes]
+    environment:
+      TELEGRAM_TOKEN:
+        from_secret: telegram_token
+    when:
+      status: [failure, success]
+      branch:
+        - main
+    settings:
+      disable_web_page_preview: true
+      token: ${TELEGRAM_TOKEN}
+      to: -4152454993
+      message: |
+        {{#success build.status}}
+        ✅ {{repo.name}}:{{commit.branch}}
+        {{else}}
+        ❌ {{repo.name}}:{{commit.branch}}
+        {{/success}}
+        {{commit.message}} @{{commit.author}}
+        {{build.link}}
