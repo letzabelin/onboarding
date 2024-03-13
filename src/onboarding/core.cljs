@@ -1,19 +1,41 @@
 (ns onboarding.core
   (:require
-    [reagent.core :as r]
-    [reagent.dom :as d]))
+    ["@mui/material" :as mui]
+    [devtools.core :as devtools]
+    [onboarding.config :as config]
+    [onboarding.handlers]
+    [onboarding.pages.home :refer [home-page]]
+    [onboarding.routes :as routes]
+    [onboarding.subs]
+    [onboarding.views :as views]
+    [re-frame.core :as rf]
+    [reagent.dom :as reagent]))
 
 
-(defn home-page
+(defn dev-setup
   []
-  [:div [:h2 "Hello world"]])
+  (when config/debug?
+    (println "dev mode")
+    (devtools/install!)))
+
+
+(defn wrapper
+  []
+  [:<>
+   [:> mui/CssBaseline]
+   ;; [home-page]
+   [views/current-page]])
 
 
 (defn mount-root
   []
-  (d/render [home-page] (.getElementById js/document "app")))
+  (reagent/render [wrapper]
+                  (.getElementById js/document "app")))
 
 
-(defn ^:export init!
+(defn ^:export init
   []
+  (rf/dispatch-sync [:initialize-db])
+  (dev-setup)
+  (routes/app-routes)
   (mount-root))

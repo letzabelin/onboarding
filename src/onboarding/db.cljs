@@ -1,0 +1,5 @@
+(ns onboarding.db)
+
+
+(def default-db
+  {:name "re-frame"})

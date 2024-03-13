@@ -6,3 +6,9 @@
 (defn cljs
   []
   (shadow/repl :app))
+
+
+(comment
+  (cljs)
+  
+  (cljs/quit))
