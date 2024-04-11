@@ -2,14 +2,15 @@
   (:require
     ["@mui/material" :as mui]
     [devtools.core :as devtools]
-    [onboarding.config :as config]
-    [onboarding.handlers]
-    [onboarding.pages.home :refer [home-page]]
-    [onboarding.routes :as routes]
-    [onboarding.subs]
-    [onboarding.views :as views]
-    [re-frame.core :as rf]
+    [onboarding.config.default :as config]
+    [onboarding.events :as core-events]
+    [onboarding.routing.router :as router]
+    [re-frame.core :as re-frame]
     [reagent.dom :as reagent]))
+
+
+(when config/debug?
+  (enable-console-print!))
 
 
 (defn dev-setup
@@ -19,23 +20,22 @@
     (devtools/install!)))
 
 
-(defn wrapper
+(defn main
   []
-  [:<>
-   [:> mui/CssBaseline]
-   ;; [home-page]
-   [views/current-page]])
+  [:<> [:> mui/CssBaseline]
+   [router/current-page]])
 
 
 (defn mount-root
   []
-  (reagent/render [wrapper]
-                  (.getElementById js/document "app")))
+  (re-frame/clear-subscription-cache!)
+  (router/init-routes!)
+  (reagent/render [main]
+                  (.getElementById js/document "root")))
 
 
 (defn ^:export init
   []
-  (rf/dispatch-sync [:initialize-db])
+  (re-frame/dispatch-sync [::core-events/initialize-db])
   (dev-setup)
-  (routes/app-routes)
   (mount-root))

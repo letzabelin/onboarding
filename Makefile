@@ -6,10 +6,10 @@ deps:
 repl:
 	npx shadow-cljs browser-repl
 
-start:
+watch:
 	npx shadow-cljs watch app
 
-build:
+release:
 	npx shadow-cljs release app
 
 docker:

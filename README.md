@@ -3,7 +3,7 @@
 ### Development mode
 ```bash
 make deps
-make start
+make watch
 ```
 
 ### Start a ClojureScript REPL
@@ -13,5 +13,5 @@ make repl
 
 ### Building for production
 ```bash
-make build
+make release
 ```
