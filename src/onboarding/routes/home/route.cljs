@@ -8,6 +8,6 @@
 
 
 (def home-route
-  {:name ::home
+  {:name :home
    :view home-page
    :controllers home-controllers})

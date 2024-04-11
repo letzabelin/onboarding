@@ -2,12 +2,12 @@
   (:require
     ["@mui/icons-material" :as mui-icons]
     ["@mui/material" :as mui]
-    [reagent.core :as reagent]))
+    [reagent.core :as r]))
 
 
 (defn textfield
   []
-  (let [show-password? (reagent/atom false)]
+  (let [show-password? (r/atom false)]
     (fn [props]
       [:> mui/TextField
        {:label (:label props)
@@ -23,7 +23,7 @@
         :autoFocus (:auto-focus props)
         :InputProps
         (when (= (:type props) "password")
-          {:endAdornment (reagent/as-element
+          {:endAdornment (r/as-element
                            [:> mui/InputAdornment {:position "end"}
                             [:> mui/IconButton {:onClick #(swap! show-password? not)
                                                 :onMouseDown #(.preventDefault %)

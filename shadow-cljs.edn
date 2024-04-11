@@ -1,16 +1,22 @@
 {:source-paths ["src"]
+
  :dependencies [[binaryage/devtools "1.0.6"]
-                [nrepl "1.0.0"]
+                [cider/cider-nrepl "LATEST"]
+                ;; [nrepl "1.0.0"]
                 [reagent "1.1.1"]
                 [re-frame "1.4.3"]
                 [re-frisk "1.6.0"]
                 [day8.re-frame/http-fx "0.2.4"]
                 [metosin/reitit "0.7.0-alpha7"]]
+
  :builds       {:app {:target     :browser
                       :output-dir "public/js"
                       :asset-path "/js"
                       :modules    {:app {:entries [onboarding.core]}}
                       :devtools   {:after-load onboarding.core/mount-root
-                                   :preloads [re-frisk.preload]}}}
+                                   :preloads [re-frisk.preload devtools.preload]}}}
+
+ :nrepl {:middleware [cider.nrepl/cider-middleware]
+         :port 50655}
 
  :dev-http     {3000 {:root "public"}}}

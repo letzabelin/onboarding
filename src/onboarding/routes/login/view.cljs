@@ -6,20 +6,20 @@
     [onboarding.components.textfield :refer [textfield]]
     [onboarding.routes.login.events :as login-page-events]
     [onboarding.routes.login.subs :as login-page-subs]
-    [re-frame.core :as re-frame]
-    [reagent.core :as reagent]))
+    [re-frame.core :as rf]
+    [reagent.core :as r]))
 
 
 (defn login-page
   []
-  (let [form-status @(re-frame/subscribe [::login-page-subs/form-status])
-        form-errors @(re-frame/subscribe [::login-page-subs/form-errors])
+  (let [form-status @(rf/subscribe [::login-page-subs/form-status])
+        form-errors @(rf/subscribe [::login-page-subs/form-errors])
         submit-handler (fn [event]
                          (let [form-data (js/FormData. (.-target event))]
                            (.preventDefault event)
                            (when-not (= form-status "loading")
-                             (re-frame/dispatch
-                               [::login-page-events/login
+                             (rf/dispatch
+                               [::login-page-events/log-in
                                 {:email (.get form-data "email")
                                  :password (.get form-data "password")}]))))]
     [:> mui/Box {:display "flex"
@@ -39,7 +39,7 @@
                   :bgcolor "#FFFFFF"
                   :borderRadius "8px"}
 
-      [:img {:src "/images/logo.svg"
+      [:img {:src "/images/login-logo.svg"
              :alt "Login logo"
              :width "150px"
              :height "150px"}]
@@ -71,6 +71,6 @@
                                   :loading (= form-status "loading")
                                   :loadingPosition (when (= form-status "loading") "start")
                                   :startIcon (when (= form-status "loading")
-                                               (reagent/as-element [:> mui-icons/Menu]))
+                                               (r/as-element [:> mui-icons/Menu]))
                                   :sx {:width "100%"}}
         "Login"]]]]))

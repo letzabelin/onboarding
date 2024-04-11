@@ -1,12 +1,11 @@
 (ns onboarding.routes.root.events
   (:require
-    [onboarding.routes.login.route :as login-route]
     [onboarding.routing.events :as routing-events]
-    [re-frame.core :as re-frame]))
+    [re-frame.core :as rf]))
 
 
-(re-frame/reg-event-fx
+(rf/reg-event-fx
   ::check-session
   (fn [{:keys [db]} _]
     {:fx [(when (nil? (:session db))
-            [:dispatch [::routing-events/navigate ::login-route/login]])]}))
+            [:dispatch [::routing-events/navigate :login]])]}))

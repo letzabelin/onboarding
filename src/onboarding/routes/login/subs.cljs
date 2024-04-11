@@ -1,15 +1,13 @@
 (ns onboarding.routes.login.subs
   (:require
-    [re-frame.core :as re-frame]))
+    [re-frame.core :as rf]))
 
 
-(re-frame/reg-sub
+(rf/reg-sub
   ::form-status
-  (fn [db]
-    (get-in db [:current-route-db :form-status])))
+  :-> (comp :form-status :current-route-db))
 
 
-(re-frame/reg-sub
+(rf/reg-sub
   ::form-errors
-  (fn [db]
-    (get-in db [:current-route-db :form-errors])))
+  :-> (comp :form-errors :current-route-db))

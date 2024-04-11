@@ -2,14 +2,14 @@
   (:require
     [onboarding.routes.login.events :as login-page-events]
     [onboarding.routes.login.view :refer [login-page]]
-    [re-frame.core :as re-frame]))
+    [re-frame.core :as rf]))
 
 
 (def ^:private login-controllers
-  [{:start #(re-frame/dispatch [::login-page-events/index %])}])
+  [{:start #(rf/dispatch [::login-page-events/index %])}])
 
 
 (def login-route
-  {:name ::login
+  {:name :login
    :view login-page
    :controllers login-controllers})

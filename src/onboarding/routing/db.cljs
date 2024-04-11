@@ -1,10 +1,10 @@
 (ns onboarding.routing.db
   (:require
-    [re-frame.core :as re-frame]
-    [reitit.frontend.easy :as reitit-frontend-easy]))
+    [re-frame.core :as rf]
+    [reitit.frontend.easy :as rfe]))
 
 
-(re-frame/reg-fx
+(rf/reg-fx
   ::navigate!
   (fn [k params query]
-    (reitit-frontend-easy/push-state k params query)))
+    (rfe/push-state k params query)))

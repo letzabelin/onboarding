@@ -5,8 +5,8 @@
     [onboarding.config.default :as config]
     [onboarding.events :as core-events]
     [onboarding.routing.router :as router]
-    [re-frame.core :as re-frame]
-    [reagent.dom :as reagent]))
+    [re-frame.core :as rf]
+    [reagent.dom :as r]))
 
 
 (when config/debug?
@@ -28,14 +28,14 @@
 
 (defn mount-root
   []
-  (re-frame/clear-subscription-cache!)
+  (rf/clear-subscription-cache!)
   (router/init-routes!)
-  (reagent/render [main]
-                  (.getElementById js/document "root")))
+  (r/render [main]
+            (.getElementById js/document "root")))
 
 
 (defn ^:export init
   []
-  (re-frame/dispatch-sync [::core-events/initialize-db])
+  (rf/dispatch-sync [::core-events/initialize-db])
   (dev-setup)
   (mount-root))

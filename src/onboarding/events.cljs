@@ -1,15 +1,15 @@
 (ns onboarding.events
   (:require
-    [onboarding.db :as db]
-    [re-frame.core :as re-frame]))
+    [onboarding.db :as core-db]
+    [re-frame.core :as rf]))
 
 
 (def get-session-from-local-storage
-  (re-frame/inject-cofx ::db/session-local-storage))
+  (rf/inject-cofx ::core-db/session-local-storage))
 
 
-(re-frame/reg-event-fx
+(rf/reg-event-fx
   ::initialize-db
   [get-session-from-local-storage]
   (fn [{:keys [session-local-storage]} _]
-    {:db (assoc db/default-db :session session-local-storage)}))
+    {:db (assoc core-db/default-db :session session-local-storage)}))
