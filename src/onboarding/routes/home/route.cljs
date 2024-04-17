@@ -1,7 +1,7 @@
 (ns onboarding.routes.home.route
   (:require
     [onboarding.routes.home.events :as home-route-events]
-    [onboarding.routes.home.view :refer [home-page]]
+    [onboarding.routes.home.view :refer [view]]
     [re-frame.core :as rf]))
 
 
@@ -11,5 +11,5 @@
 
 (def home-route
   {:name :home
-   :view home-page
+   :view view
    :controllers home-controllers})

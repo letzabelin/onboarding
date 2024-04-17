@@ -4,6 +4,7 @@
     [clojure.string :as str]
     [day8.re-frame.http-fx]
     [onboarding.db :refer [remove-from-local-storage]]
+    [onboarding.events :as core-events]
     [onboarding.routes.home.db :refer [home-route-db]]
     [onboarding.routing.events :as routing-events]
     [re-frame.core :as rf]))
@@ -45,7 +46,8 @@
                         :headers {"Authorization" (str "Bearer " (:session db))}
                         :format (ajax/json-request-format)
                         :response-format (ajax/json-response-format {:keywords? true})
-                        :on-success [::success-logout]}]]}))
+                        :on-success [::success-logout]
+                        :on-failure [::failure-logout]}]]}))
 
 
 (rf/reg-event-fx
@@ -53,8 +55,19 @@
   (fn [{:keys [db]}]
     {:db (-> db
              (assoc :session nil)
-             (assoc-in [:current-route-db :logout-status] "idle"))
+             (assoc-in [:current-route-db :logout-status] "success"))
      :fx [[:dispatch [::routing-events/navigate :login]]]}))
+
+
+(rf/reg-event-fx
+  ::failure-logout
+  (fn [{:keys [db]} [_ response]]
+    (let [error-message (-> response :response :text :div)]
+      {:db (-> db
+               (assoc :session nil)
+               (assoc-in [:current-route-db :logout-status] "failure"))
+       :fx [[:dispatch [::core-events/show-alert {:severity "error"
+                                                  :text error-message}]]]})))
 
 
 (rf/reg-event-fx
@@ -75,15 +88,18 @@
   ::success-fetch
   (fn [db [_ response]]
     (-> db
-        (assoc-in [:current-route-db :store :status] "idle")
+        (assoc-in [:current-route-db :store :status] "success")
         (assoc-in [:current-route-db :store :total-count] (:total response))
         (assoc-in [:current-route-db :store :data] (normalize-records (:data response))))))
 
 
-(rf/reg-event-db
+(rf/reg-event-fx
   ::failure-fetch
-  (fn [db]
-    (assoc-in db [:current-route-db :store :status] "idle")))
+  (fn [{:keys [db]} [_ response]]
+    (let [error-message (-> response :response :text :div)]
+      {:db (assoc-in db [:current-route-db :store :status] "failure")
+       :fx [[:dispatch [::core-events/show-alert {:severity "error"
+                                                  :text error-message}]]]})))
 
 
 (rf/reg-event-fx

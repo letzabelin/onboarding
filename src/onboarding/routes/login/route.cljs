@@ -1,7 +1,7 @@
 (ns onboarding.routes.login.route
   (:require
     [onboarding.routes.login.events :as login-route-events]
-    [onboarding.routes.login.view :refer [login-page]]
+    [onboarding.routes.login.view :refer [view]]
     [re-frame.core :as rf]))
 
 
@@ -11,5 +11,5 @@
 
 (def login-route
   {:name :login
-   :view login-page
+   :view view
    :controllers login-controllers})

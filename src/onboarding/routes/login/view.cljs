@@ -10,7 +10,7 @@
     [reagent.core :as r]))
 
 
-(defn login-page
+(defn view
   []
   (let [form-status @(rf/subscribe [::login-page-subs/form-status])
         form-errors @(rf/subscribe [::login-page-subs/form-errors])

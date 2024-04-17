@@ -72,7 +72,7 @@
     :format render-diagnosis}])
 
 
-(defn home-page
+(defn view
   []
   (let [session @(rf/subscribe [::core-subs/session])
         logout-status @(rf/subscribe [::home-subs/logout-status])

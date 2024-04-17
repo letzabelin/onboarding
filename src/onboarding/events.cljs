@@ -8,6 +8,20 @@
   (rf/inject-cofx ::core-db/session-local-storage))
 
 
+(rf/reg-event-db
+  ::show-alert
+  (fn [db [_ {:keys [severity text]}]]
+    (assoc db :alert {:open? true
+                      :severity severity
+                      :text text})))
+
+
+(rf/reg-event-db
+  ::close-alert
+  (fn [db _]
+    (assoc-in db [:alert :open?] false)))
+
+
 (rf/reg-event-fx
   ::initialize-db
   [get-session-from-local-storage]

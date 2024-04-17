@@ -6,3 +6,8 @@
 (rf/reg-sub
   ::session
   :-> :session)
+
+
+(rf/reg-sub
+  ::alert
+  :-> :alert)

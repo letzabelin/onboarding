@@ -5,6 +5,7 @@
     [onboarding.config.default :as config]
     [onboarding.events :as core-events]
     [onboarding.routing.router :as router]
+    [onboarding.subs :as core-subs]
     [re-frame.core :as rf]
     [reagent.dom :as r]))
 
@@ -22,8 +23,17 @@
 
 (defn main
   []
-  [:<> [:> mui/CssBaseline]
-   [router/current-page]])
+  (let [alert @(rf/subscribe [::core-subs/alert])
+        on-alert-close (fn [_] (rf/dispatch [::core-events/close-alert]))]
+    [:<>
+     [:> mui/CssBaseline]
+     [router/current-page]
+     [:> mui/Snackbar {:open (:open? alert)
+                       :autoHideDuration 3000
+                       :onClose on-alert-close}
+      [:> mui/Alert {:severity (:severity alert)
+                     :onClose on-alert-close}
+       (or (:text alert) "")]]]))
 
 
 (defn mount-root

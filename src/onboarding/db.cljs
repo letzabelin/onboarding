@@ -5,6 +5,7 @@
 
 (def default-db
   {:session nil
+   :alert nil
    :current-route nil
    :current-route-db nil})
 
