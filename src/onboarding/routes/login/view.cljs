@@ -4,7 +4,7 @@
     ["@mui/lab" :as mui-lab]
     ["@mui/material" :as mui]
     [onboarding.components.textfield :refer [textfield]]
-    [onboarding.routes.login.events :as login-page-events]
+    [onboarding.routes.login.events :as login-route-events]
     [onboarding.routes.login.subs :as login-page-subs]
     [re-frame.core :as rf]
     [reagent.core :as r]))
@@ -19,7 +19,7 @@
                            (.preventDefault event)
                            (when-not (= form-status "loading")
                              (rf/dispatch
-                               [::login-page-events/log-in
+                               [::login-route-events/log-in
                                 {:email (.get form-data "email")
                                  :password (.get form-data "password")}]))))]
     [:> mui/Box {:display "flex"
@@ -71,6 +71,6 @@
                                   :loading (= form-status "loading")
                                   :loadingPosition (when (= form-status "loading") "start")
                                   :startIcon (when (= form-status "loading")
-                                               (r/as-element [:> mui-icons/Menu]))
+                                               (r/as-element [:> mui-icons/Save]))
                                   :sx {:width "100%"}}
-        "Login"]]]]))
+        "Log in"]]]]))

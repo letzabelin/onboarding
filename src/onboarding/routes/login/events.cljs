@@ -3,7 +3,7 @@
     [ajax.core :as ajax]
     [day8.re-frame.http-fx]
     [onboarding.db :refer [add-to-local-storage]]
-    [onboarding.routes.login.db :refer [login-page-db]]
+    [onboarding.routes.login.db :refer [login-route-db]]
     [onboarding.routing.events :as routing-events]
     [re-frame.core :as rf]))
 
@@ -51,4 +51,4 @@
 (rf/reg-event-db
   ::index
   (fn [db _]
-    (assoc db :current-route-db login-page-db)))
+    (assoc db :current-route-db login-route-db)))

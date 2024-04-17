@@ -1,6 +1,6 @@
 (ns onboarding.routes.login.db)
 
 
-(def login-page-db
+(def login-route-db
   {:form-status "idle"
    :form-errors nil})

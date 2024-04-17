@@ -7,17 +7,13 @@
     [onboarding.routing.subs :as routing-subs]
     [re-frame.core :as rf]
     [reitit.frontend :as rt]
-    [reitit.frontend.controllers :as rtfc]
     [reitit.frontend.easy :as rtfe]))
 
 
 (defn- on-navigate
-  [next-route]
-  (let [current-route @(rf/subscribe [::routing-subs/current-route])]
-    (when next-route
-      (let [controllers (rtfc/apply-controllers (:controllers current-route) next-route)
-            route  (assoc next-route :controllers controllers)]
-        (rf/dispatch [::routing-events/set-current-route route])))))
+  [route]
+  (when route
+    (rf/dispatch [::routing-events/set-current-route route])))
 
 
 (def ^:private routes
