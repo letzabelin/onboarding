@@ -2,7 +2,6 @@
   (:require
     [onboarding.routes.home.route :refer [home-route]]
     [onboarding.routes.login.route :refer [login-route]]
-    [onboarding.routes.root.route :refer [root-route]]
     [onboarding.routing.events :as routing-events]
     [onboarding.routing.subs :as routing-subs]
     [re-frame.core :as rf]
@@ -17,7 +16,7 @@
 
 
 (def ^:private routes
-  [["/" root-route
+  [["/"
     ["" home-route]]
    ["/login" login-route]])
 

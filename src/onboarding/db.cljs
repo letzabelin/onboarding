@@ -29,8 +29,3 @@
   ::session-local-storage
   (fn [cofx _]
     (assoc cofx :session-local-storage (get-from-local-storage "session"))))
-
-
-(rf/reg-sub
-  ::session
-  :-> :session)

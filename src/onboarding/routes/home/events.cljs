@@ -131,5 +131,7 @@
 (rf/reg-event-fx
   ::index
   (fn [{:keys [db]} _]
-    {:db (assoc db :current-route-db home-route-db)
-     :fx [[:dispatch [::fetch (select-keys (:store home-route-db) [:current-page :records-per-page])]]]}))
+    {:fx (if (:session db)
+           [[:db (assoc db :current-route-db home-route-db)]
+            [:dispatch [::fetch (select-keys (:store home-route-db) [:current-page :records-per-page])]]]
+           [[:dispatch [::routing-events/navigate :login]]])}))
